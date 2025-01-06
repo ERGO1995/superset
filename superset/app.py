@@ -50,7 +50,7 @@ def create_app(superset_config_module: Optional[str] = None) -> Flask:
 
 @babel.localeselector
 def get_locale():
-   return session.get('locale') or request.accept_languages.best_match(['en', 'fr'])  # add here supported languages
+   return session.get('locale')
 
 class SupersetApp(Flask):
     pass
