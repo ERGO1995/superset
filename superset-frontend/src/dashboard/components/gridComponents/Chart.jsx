@@ -426,6 +426,17 @@ class Chart extends Component {
       queriesResponse?.map(({ cached_dttm }) => cached_dttm) || [];
     const initialValues = {};
 
+    if (formData?.groupbyColumns && Array.isArray(formData.groupbyColumns)) {
+      formData.groupbyColumns = formData.groupbyColumns.map(group =>
+        t(group, { fallback: group })
+      );
+    }
+    if (formData?.metrics && Array.isArray(formData.metrics)) {
+      formData.metrics = formData.metrics.map(metric =>
+        t(metric, { fallback: metric })
+      );
+    }
+
     return (
       <SliceContainer
         className="chart-slice"
@@ -453,8 +464,8 @@ class Chart extends Component {
           exportXLSX={this.exportXLSX}
           exportFullCSV={this.exportFullCSV}
           exportFullXLSX={this.exportFullXLSX}
-          updateSliceName={updateSliceName}
-          sliceName={sliceName}
+          updateSliceName={t(updateSliceName)}
+          sliceName={t(sliceName)}
           supersetCanExplore={supersetCanExplore}
           supersetCanShare={supersetCanShare}
           supersetCanCSV={supersetCanCSV}

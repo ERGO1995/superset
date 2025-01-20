@@ -33,6 +33,7 @@ from flask import (
     redirect,
     Response,
     session,
+    request
 )
 from flask_appbuilder import BaseView, expose, Model, ModelView
 from flask_appbuilder.actions import action
@@ -74,6 +75,7 @@ from superset.utils.filters import get_dataset_access_filters
 from superset.views.error_handling import json_error_response
 
 from .utils import bootstrap_user_data
+from flask_babel import get_locale, gettext as __, refresh
 
 FRONTEND_CONF_KEYS = (
     "SUPERSET_WEBSERVER_TIMEOUT",
@@ -348,8 +350,18 @@ def cached_common_bootstrap_data(  # pylint: disable=unused-argument
 
 
 def common_bootstrap_payload() -> dict[str, Any]:
+    # get locale from URL, else use default locale
+    locale = get_locale()
+    if request.args.get('locale'):
+        try:
+            locale = Locale.parse(request.args.get('locale'))
+            session['locale'] = str(locale)
+            refresh()
+        except Exception as e:
+            # Manage invalid locale : keep default locale
+            app.logger.warning(f"Invalid locale '{request.args.get('locale')}': {e}")
     return {
-        **cached_common_bootstrap_data(utils.get_user_id(), get_locale()),
+        **cached_common_bootstrap_data(utils.get_user_id(), locale),
         "flash_messages": get_flashed_messages(with_categories=True),
     }
 
