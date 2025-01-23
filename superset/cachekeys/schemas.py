@@ -32,10 +32,6 @@ class Datasource(Schema):
     datasource_name = fields.String(
         metadata={"description": datasource_name_description},
     )
-    catalog = fields.String(
-        allow_none=True,
-        metadata={"description": "Datasource catalog"},
-    )
     schema = fields.String(
         metadata={"description": "Datasource schema"},
     )

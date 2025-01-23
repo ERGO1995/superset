@@ -567,7 +567,7 @@ class NoOpTemplateProcessor(BaseTemplateProcessor):
         """
         Makes processing a template a noop
         """
-        return str(sql)
+        return sql
 
 
 class PrestoTemplateProcessor(JinjaTemplateProcessor):

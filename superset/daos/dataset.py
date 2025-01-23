@@ -84,19 +84,15 @@ class DatasetDAO(BaseDAO[SqlaTable]):
 
     @staticmethod
     def validate_uniqueness(
-        database: Database,
+        database_id: int,
         table: Table,
         dataset_id: int | None = None,
     ) -> bool:
-        # The catalog might not be set even if the database supports catalogs, in case
-        # multi-catalog is disabled.
-        catalog = table.catalog or database.get_default_catalog()
-
         dataset_query = db.session.query(SqlaTable).filter(
             SqlaTable.table_name == table.table,
             SqlaTable.schema == table.schema,
-            SqlaTable.catalog == catalog,
-            SqlaTable.database_id == database.id,
+            SqlaTable.catalog == table.catalog,
+            SqlaTable.database_id == database_id,
         )
 
         if dataset_id:
@@ -107,19 +103,15 @@ class DatasetDAO(BaseDAO[SqlaTable]):
 
     @staticmethod
     def validate_update_uniqueness(
-        database: Database,
+        database_id: int,
         table: Table,
         dataset_id: int,
     ) -> bool:
-        # The catalog might not be set even if the database supports catalogs, in case
-        # multi-catalog is disabled.
-        catalog = table.catalog or database.get_default_catalog()
-
         dataset_query = db.session.query(SqlaTable).filter(
             SqlaTable.table_name == table.table,
-            SqlaTable.database_id == database.id,
+            SqlaTable.database_id == database_id,
             SqlaTable.schema == table.schema,
-            SqlaTable.catalog == catalog,
+            SqlaTable.catalog == table.catalog,
             SqlaTable.id != dataset_id,
         )
         return not db.session.query(dataset_query.exists()).scalar()

@@ -1633,10 +1633,7 @@ class TestSecurityManager(SupersetTestCase):
     @patch("superset.security.SupersetSecurityManager.can_access")
     def test_raise_for_access_query(self, mock_can_access, mock_is_owner):
         query = Mock(
-            database=get_example_database(),
-            schema="bar",
-            sql="SELECT * FROM foo",
-            catalog=None,
+            database=get_example_database(), schema="bar", sql="SELECT * FROM foo"
         )
 
         mock_can_access.return_value = True

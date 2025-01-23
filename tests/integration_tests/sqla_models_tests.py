@@ -36,9 +36,7 @@ from superset.connectors.sqla.models import SqlaTable, TableColumn, SqlMetric
 from superset.constants import EMPTY_STRING, NULL_STRING
 from superset.db_engine_specs.bigquery import BigQueryEngineSpec
 from superset.db_engine_specs.druid import DruidEngineSpec
-from superset.exceptions import (
-    QueryObjectValidationError,
-)  # noqa: F401
+from superset.exceptions import QueryObjectValidationError, SupersetSecurityException  # noqa: F401
 from superset.models.core import Database
 from superset.utils.core import (
     AdhocMetricExpressionType,
