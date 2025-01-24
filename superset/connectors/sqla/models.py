@@ -2020,7 +2020,8 @@ class SqlaTable(
         if self.has_extra_cache_key_calls(query_obj):
             sqla_query = self.get_sqla_query(**query_obj)
             extra_cache_keys += sqla_query.extra_cache_keys
-        return list(set(extra_cache_keys))
+        #return list(set(extra_cache_keys))
+        return extra_cache_keys
 
     @property
     def quote_identifier(self) -> Callable[[str], str]:
