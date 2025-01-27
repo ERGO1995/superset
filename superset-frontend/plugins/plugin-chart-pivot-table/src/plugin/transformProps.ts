@@ -175,6 +175,6 @@ export default function transformProps(chartProps: ChartProps<QueryFormData>) {
     dateFormatters,
     onContextMenu,
     timeGrainSqla,
-    allowRenderHtml
+    allowRenderHtml,
   };
 }

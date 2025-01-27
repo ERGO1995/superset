@@ -32,5 +32,9 @@ t('Total cost');
 t('Synthesis');
 t('Details');
 
-//liste des textes présentation et lien vers glossaire
-t('Easily track and control KPI (turnover, cost, margin, profitability) linked to your resources. Data from internal projects or not linked to a resource are excluded. Find the definitions and formulas of the KPIs presented in our glossary.');
+// liste des textes présentation et lien vers glossaire
+t(
+  'Easily track and control KPI (turnover, cost, margin, profitability) linked to your resources. ' +
+    'Data from internal projects or not linked to a resource are excluded. ' +
+    'Find the definitions and formulas of the KPIs presented in our glossary.',
+);

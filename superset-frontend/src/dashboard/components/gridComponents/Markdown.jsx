@@ -297,7 +297,7 @@ class Markdown extends PureComponent {
     const translatedMarkdownSource = t(
       hasError
         ? MARKDOWN_ERROR_MESSAGE
-        : this.state.markdownSource || MARKDOWN_PLACE_HOLDER
+        : this.state.markdownSource || MARKDOWN_PLACE_HOLDER,
     );
 
     return (
