@@ -91,23 +91,23 @@ export const getValueFormatter = (
       return new CurrencyFormatter({ currency: currencyFormat, d3Format });
     }
     return getNumberFormatter(d3Format);
-  } else {
-    try {
-      const currency = getCurrencyForLocale(urlLocale);
-      const formatter = new Intl.NumberFormat(urlLocale, {
-        style: 'currency',
-        currency,
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      return new NumberFormatter({
-        id: `currency-${currency}`,
-        formatFunc: (value: number) => formatter.format(value),
-        label: `Currency (${currency})`,
-        description: `Formats numbers as currency in ${currency}`,
-      });
-    } catch (error) {
-      return getNumberFormatter(d3Format);
-    }
+  }
+
+  try {
+    const currency = getCurrencyForLocale(urlLocale);
+    const formatter = new Intl.NumberFormat(urlLocale, {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    return new NumberFormatter({
+      id: `currency-${currency}`,
+      formatFunc: (value: number) => formatter.format(value),
+      label: `Currency (${currency})`,
+      description: `Formats numbers as currency in ${currency}`,
+    });
+  } catch (error) {
+    return getNumberFormatter(d3Format);
   }
 };
