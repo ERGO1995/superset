@@ -83,8 +83,10 @@ const TabTitleContainer = styled.div`
     margin: ${-gridUnit}px ${gridUnit * -2}px;
     transition: box-shadow 0.2s ease-in-out;
     ${
-    isHighlighted && `box-shadow: 0 0 ${gridUnit}px ${colors.primary.light1};`
-  }
+      isHighlighted
+        ? `box-shadow: 0 0 ${gridUnit}px ${colors.primary.light1};`
+        : ''
+    }
   `}
 `;
 

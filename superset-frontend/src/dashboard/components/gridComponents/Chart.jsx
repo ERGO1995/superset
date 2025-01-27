@@ -430,12 +430,12 @@ const Chart = props => {
   // Traduction of metrics and dimensions libella
   if (formData?.groupbyColumns && Array.isArray(formData.groupbyColumns)) {
     formData.groupbyColumns = formData.groupbyColumns.map(group =>
-      t(group, { fallback: group })
+      t(group, { fallback: group }),
     );
   }
   if (formData?.metrics && Array.isArray(formData.metrics)) {
     formData.metrics = formData.metrics.map(metric =>
-      t(metric, { fallback: metric })
+      t(metric, { fallback: metric }),
     );
   }
 
