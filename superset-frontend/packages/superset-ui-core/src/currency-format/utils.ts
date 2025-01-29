@@ -82,12 +82,29 @@ export const getValueFormatter = (
   key?: string,
 ): ValueFormatter => {
   const urlParams = new URLSearchParams(window.location.search);
-  const urlLocale = urlParams.get('locale') || 'en-US'; // fallback to en-US
-  const currencySymbol = urlParams.get('currencySymbol'); // Custom symbol from URL params
+  const urlLocale = urlParams.get('locale'); // Récupérer locale depuis URL
+  const currencySymbol = urlParams.get('currencySymbol'); // Récupérer symbol depuis URL
+
+  // ✅ Vérifier si on est en embedding (si locale ou currencySymbol sont spécifiés)
+  const isEmbedding = !!(urlLocale || currencySymbol);
+
+  // ✅ Cas Superset standard sans embedding → Pas de symbole
+  if (!isEmbedding) {
+    console.log('Pas d’URL params - Superset standard, affichage par défaut.');
+    if (currencyFormat?.symbol) {
+      return new CurrencyFormatter({ currency: currencyFormat, d3Format });
+    }
+    return getNumberFormatter(d3Format);
+  }
 
   try {
-    const currencyCode = getCurrencyForLocale(urlLocale);
-    const formatter = new Intl.NumberFormat(urlLocale, {
+    // ✅ Définir locale et devise
+    const locale = urlLocale || 'en-US'; // Fallback à 'en-US'
+    const currencyCode = getCurrencyForLocale(locale);
+    const finalSymbol = currencySymbol || currencyCode; // Si currencySymbol est défini, il prime
+
+    // ✅ Appliquer le format numérique
+    const formatter = new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currencyCode,
       minimumFractionDigits: 2,
@@ -99,22 +116,21 @@ export const getValueFormatter = (
       formatFunc: (value: number) => {
         let formattedValue = formatter.format(value);
 
+        // ✅ Remplacer le symbole uniquement si un `currencySymbol` est défini
         if (currencySymbol) {
-          formattedValue = formattedValue.replace(
-            /\p{Sc}|\b[A-Z]{3}\b/gu,
-            currencySymbol,
-          );
+          formattedValue = formattedValue.replace(/\p{Sc}|\b[A-Z]{3}\b/gu, currencySymbol);
         }
 
         return formattedValue;
       },
-      label: `Currency (${currencySymbol || currencyCode})`,
-      description: `Formats numbers as currency in ${
-        currencySymbol || currencyCode
-      }`,
+      label: isEmbedding ? `Currency (${finalSymbol})` : '',
+      description: isEmbedding
+        ? `Formats numbers as currency in ${finalSymbol}`
+        : '',
     });
   } catch (error) {
     console.error('Error creating number formatter:', error);
     return getNumberFormatter(d3Format);
   }
 };
+
