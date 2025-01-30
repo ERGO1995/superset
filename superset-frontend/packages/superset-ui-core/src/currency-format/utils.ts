@@ -10,10 +10,8 @@
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations
- * under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 import {
   Currency,
@@ -93,6 +91,11 @@ export const getValueFormatter = (
       : getNumberFormatter(d3Format);
   }
 
+  // ✅ Vérifier si c'est un format de pourcentage et ne rien modifier
+  if (d3Format?.includes('%')) {
+    return getNumberFormatter(d3Format);
+  }
+
   try {
     const currencyCode = getCurrencyForLocale(urlLocale || 'en-US');
     const formatter = new Intl.NumberFormat(urlLocale || 'en-US', {
@@ -106,12 +109,15 @@ export const getValueFormatter = (
       id: `currency-${currencyCode}`,
       formatFunc: (value: number) => {
         let formattedValue = formatter.format(value);
+
+        // ✅ Si currencySymbol est défini, remplacer l'ancien symbole monétaire par le nouveau
         if (currencySymbol) {
           formattedValue = formattedValue.replace(
-            /\p{Sc}|\b[A-Z]{3}\b/gu,
+            /[\p{Sc}A-Z]{1,3}/gu, // Détecte et remplace les symboles monétaires et codes devise (ex: $, USD)
             currencySymbol,
           );
         }
+
         return formattedValue;
       },
       label: `Currency (${currencySymbol || currencyCode})`,
