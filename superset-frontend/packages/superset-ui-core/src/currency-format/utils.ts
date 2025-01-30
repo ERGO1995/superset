@@ -1,22 +1,20 @@
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
+ * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations
  * under the License.
  */
-
 import {
   Currency,
   CurrencyFormatter,
@@ -82,29 +80,22 @@ export const getValueFormatter = (
   key?: string,
 ): ValueFormatter => {
   const urlParams = new URLSearchParams(window.location.search);
-  const urlLocale = urlParams.get('locale'); // Récupérer locale depuis URL
-  const currencySymbol = urlParams.get('currencySymbol'); // Récupérer symbol depuis URL
+  const urlLocale = urlParams.get('locale');
+  const currencySymbol = urlParams.get('currencySymbol');
 
-  // ✅ Vérifier si on est en embedding (si locale ou currencySymbol sont spécifiés)
+  // ✅ Vérifier si on est dans un embedding
   const isEmbedding = !!(urlLocale || currencySymbol);
 
-  // ✅ Cas Superset standard sans embedding → Pas de symbole
+  // ✅ Si pas d'embedding et Superset standard, garder le comportement d'origine
   if (!isEmbedding) {
-    console.log('Pas d’URL params - Superset standard, affichage par défaut.');
-    if (currencyFormat?.symbol) {
-      return new CurrencyFormatter({ currency: currencyFormat, d3Format });
-    }
-    return getNumberFormatter(d3Format);
+    return currencyFormat?.symbol
+      ? new CurrencyFormatter({ currency: currencyFormat, d3Format })
+      : getNumberFormatter(d3Format);
   }
 
   try {
-    // ✅ Définir locale et devise
-    const locale = urlLocale || 'en-US'; // Fallback à 'en-US'
-    const currencyCode = getCurrencyForLocale(locale);
-    const finalSymbol = currencySymbol || currencyCode; // Si currencySymbol est défini, il prime
-
-    // ✅ Appliquer le format numérique
-    const formatter = new Intl.NumberFormat(locale, {
+    const currencyCode = getCurrencyForLocale(urlLocale || 'en-US');
+    const formatter = new Intl.NumberFormat(urlLocale || 'en-US', {
       style: 'currency',
       currency: currencyCode,
       minimumFractionDigits: 2,
@@ -115,22 +106,21 @@ export const getValueFormatter = (
       id: `currency-${currencyCode}`,
       formatFunc: (value: number) => {
         let formattedValue = formatter.format(value);
-
-        // ✅ Remplacer le symbole uniquement si un `currencySymbol` est défini
         if (currencySymbol) {
-          formattedValue = formattedValue.replace(/\p{Sc}|\b[A-Z]{3}\b/gu, currencySymbol);
+          formattedValue = formattedValue.replace(
+            /\p{Sc}|\b[A-Z]{3}\b/gu,
+            currencySymbol,
+          );
         }
-
         return formattedValue;
       },
-      label: isEmbedding ? `Currency (${finalSymbol})` : '',
-      description: isEmbedding
-        ? `Formats numbers as currency in ${finalSymbol}`
-        : '',
+      label: `Currency (${currencySymbol || currencyCode})`,
+      description: `Formats numbers as currency in ${
+        currencySymbol || currencyCode
+      }`,
     });
   } catch (error) {
     console.error('Error creating number formatter:', error);
     return getNumberFormatter(d3Format);
   }
 };
-
