@@ -21,11 +21,9 @@ import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import {
   AdhocMetric,
   BinaryQueryObjectFilterClause,
-  CurrencyFormatter,
   DataRecordValue,
   FeatureFlag,
   getColumnLabel,
-  getNumberFormatter,
   getSelectedText,
   isAdhocColumn,
   isFeatureEnabled,
