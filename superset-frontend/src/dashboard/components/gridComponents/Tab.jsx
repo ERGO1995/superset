@@ -313,8 +313,21 @@ const Tab = props => {
           ref={dragSourceRef}
         >
           <EditableTitle
-            title={t(component.meta.text)}
-            defaultTitle={t(component.meta.defaultText)}
+            title={
+              component.meta.text
+                ? t(component.meta.text, {
+                    fallback: component.meta.text,
+                  })
+                : ''
+            }
+            defaultTitle={
+              component.meta.defaultText &&
+              typeof component.meta.defaultText === 'string'
+                ? t(component.meta.defaultText, {
+                    fallback: component.meta.defaultText,
+                  })
+                : ''
+            }
             placeholder={component.meta.placeholder}
             canEdit={editMode && isFocused}
             onSaveTitle={handleChangeText}
