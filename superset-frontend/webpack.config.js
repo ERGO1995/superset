@@ -161,7 +161,7 @@ if (!isDevMode) {
     new ForkTsCheckerWebpackPlugin({
       eslint: {
         files: './{src,packages,plugins}/**/*.{ts,tsx,js,jsx}',
-        memoryLimit: 4096,
+        memoryLimit: 2048,
         options: {
           ignorePath: './.eslintignore',
         },
