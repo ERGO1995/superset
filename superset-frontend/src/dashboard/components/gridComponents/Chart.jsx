@@ -429,15 +429,14 @@ class Chart extends Component {
     // Traduction of metrics and dimensions libella
     if (formData?.groupbyColumns && Array.isArray(formData.groupbyColumns)) {
       formData.groupbyColumns = formData.groupbyColumns.map(group =>
-        t(group, { fallback: group }),
+        typeof group === 'string' ? t(group, { fallback: group }) : group,
       );
     }
     if (formData?.metrics && Array.isArray(formData.metrics)) {
       formData.metrics = formData.metrics.map(metric =>
-        t(metric, { fallback: metric }),
+        typeof metric === 'string' ? t(metric, { fallback: metric }) : metric,
       );
     }
-
     return (
       <SliceContainer
         className="chart-slice"
